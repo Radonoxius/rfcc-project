@@ -1,0 +1,4 @@
+/rfcc
+/src/*.o
+/scripts/__pycache__/
+/tmp/
