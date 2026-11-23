@@ -110,7 +110,7 @@ Run the driver script from the project root:
 ./scripts/run_replication.sh
 ```
 
-It builds the executable if needed and writes these curves under `results/`:
+It builds the executable if needed and writes these curves under `results/` :
 
 | File | Array size | Termination |
 | --- | ---: | ---: |
