@@ -2,15 +2,19 @@ CC ?= cc
 CFLAGS ?= -O2 -std=c11 -Wall -Wextra -Wpedantic -Iinclude
 LDLIBS ?= -lm
 
-all: rfcc
+all: resonator-array receiver-position-tracker
 
-rfcc: src/main.o src/resonator_array.o
+resonator-array: src/main.o src/resonator_array.o
 	$(CC) $(CFLAGS) $^ $(LDLIBS) -o $@
+
+receiver-position-tracker: scripts/receiver_position_tracker.py
+	cp $< $@
+	chmod +x $@
 
 src/%.o: src/%.c include/resonator_array.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f rfcc src/*.o results/*.csv results/*.png
+	rm -f resonator-array receiver-position-tracker src/*.o results/*.csv results/*.png
 
 .PHONY: all clean

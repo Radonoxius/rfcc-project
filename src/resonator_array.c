@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define RFCC_PI 3.141592653589793238462643383279502884
+#define RESONATOR_ARRAY_PI 3.141592653589793238462643383279502884
 
 static double cabs2(double complex z) { return creal(z) * creal(z) + cimag(z) * cimag(z); }
 
@@ -73,7 +73,7 @@ double complex resonator_array_input_impedance(double x_cells,
     const size_t dim = p->n + 1; /* n array currents + receiver current */
     if (dim > SIZE_MAX / dim || dim * dim > SIZE_MAX / sizeof(double complex) ||
         dim > SIZE_MAX / sizeof(double complex)) return NAN + I * NAN;
-    const double w = 2.0 * RFCC_PI * p->frequency_hz;
+    const double w = 2.0 * RESONATOR_ARRAY_PI * p->frequency_hz;
     double complex *a = calloc(dim * dim, sizeof(*a));
     double complex *b = calloc(dim, sizeof(*b));
     if (!a || !b) { free(a); free(b); return NAN + I * NAN; }
@@ -132,7 +132,7 @@ int resonator_array_write_curve(const char *path, double x0, double x1,
         double complex z = resonator_array_input_impedance(x, p);
         if (!isfinite(creal(z)) || !isfinite(cimag(z))) { rc = EDOM; break; }
         if (fprintf(f, "%.12g,%.12g,%.12g,%.12g,%.12g\n", x, creal(z), cimag(z),
-                    cabs(z), carg(z) * 180.0 / RFCC_PI) < 0) { rc = EIO; break; }
+                    cabs(z), carg(z) * 180.0 / RESONATOR_ARRAY_PI) < 0) { rc = EIO; break; }
     }
     if (fclose(f) != 0 && rc == 0) rc = EIO;
     return rc;

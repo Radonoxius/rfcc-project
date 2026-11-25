@@ -1,4 +1,5 @@
-/rfcc
+/resonator-array
+/receiver-position-tracker
 /src/*.o
 /scripts/__pycache__/
 /tmp/
