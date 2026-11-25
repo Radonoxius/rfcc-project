@@ -16,6 +16,7 @@ src/resonator_array.c      Circuit equations, complex solver, and CSV curve writ
 src/main.c                 Command-line program and default paper-case parameters
 scripts/run_replication.sh Generate the included termination and array-size cases
 scripts/plot_results.py    Plot generated impedance curves (requires matplotlib)
+scripts/visualize_3d.py    Interactive 3D coil layout and impedance-response view
 scripts/locate.py          Estimate positions from measured magnitudes and calibration
 scripts/receiver_position_tracker.py           Noise-aware complex-impedance particle-filter tracker
 References/paper.pdf       Source paper
@@ -76,6 +77,21 @@ This builds the `resonator-array` executable. To remove the executable, object f
 make clean
 ```
 
+## Root-level Bash helpers
+
+The project includes shortcut scripts in the repository root. They locate the project directory automatically, so you can invoke them from another working directory too:
+
+| Script | What it does |
+| --- | --- |
+| `./build.sh` | Build all command-line programs. |
+| `./run_model.sh OUTPUT.csv [CELLS] [TERMINATION] [RECEIVER_R] [RECEIVER_X]` | Build the simulator if needed and generate one calibration curve. |
+| `./generate_curves.sh` | Build the model and regenerate the example curves. |
+| `./visualize_3d.sh [CURVE.csv]` | Open the interactive 3D view; defaults to the six-cell, 0.8-ohm example and creates it if missing. |
+| `./track_positions.sh CALIBRATION.csv MEASUREMENTS.csv [OPTIONS]` | Run the complex-impedance sequence tracker. |
+| `./locate_positions.sh CALIBRATION.csv MEASUREMENTS.csv` | Run the original magnitude-based locator. |
+
+For example, `./track_positions.sh results/termination_0p8.csv readings.csv --noise 0.03 --motion 0.08 > estimates.csv` writes the tracker's estimates to a file. The scripts pass arguments to the underlying programs and print usage when required inputs are missing.
+
 ## Generate an impedance curve
 
 The CLI accepts an output path and up to four optional circuit arguments:
@@ -132,6 +148,16 @@ python3 scripts/plot_results.py results/curves
 ```
 
 The script writes `results/curves_magnitude.png` for impedance magnitude against position and `results/curves_complex_plane.png` for the complex input impedance trajectory. The complex trajectory is useful for inspecting whether different positions produce similar impedance values; the paper discusses this univocity property in Section 3.3.
+
+## Interactive 3D visualization
+
+To explore a generated curve visually, run:
+
+```sh
+python3 scripts/visualize_3d.py results/termination_0p8.csv
+```
+
+The Matplotlib window shows a schematic 3D row of primary coils and the moving receiver. Drag the position slider to update the receiver location and see the corresponding modeled impedance magnitude and phase highlighted in the response plots. The orange links indicate the receiver's modeled coupling to the two nearest array cells; they are not magnetic-field lines. This is a geometric illustration paired with the solver's response curve, not a 3D electromagnetic field simulation. Matplotlib is required.
 
 ## Estimate positions from measurements
 

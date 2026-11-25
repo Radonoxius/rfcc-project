@@ -99,9 +99,11 @@ The first reading starts with possible positions spread across the full calibrat
 - `include/resonator_array.h`: the C interface and list of model settings.
 - `scripts/run_replication.sh`: builds the curve examples for several last-coil termination values.
 - `scripts/plot_results.py`: turns curve CSV files into pictures. It needs Python and Matplotlib.
+- `scripts/visualize_3d.py`: opens an interactive 3D coil-layout view with a slider and highlights the modeled signal response at the selected position. It needs Matplotlib.
 - `results/`: example curves and plots already in the repository.
 - `References/paper.pdf`: the research paper that the original model is based on.
 - `Makefile`: instructions used by `make` to build both command-line programs.
+- Root-level `.sh` files: shortcuts for building, running the model, generating curves, locating positions, and opening the 3D view.
 
 ## Make plots and example curves
 
@@ -111,6 +113,8 @@ To create the included cases again:
 ./scripts/run_replication.sh
 ```
 
+There are also short helper commands in the project root. For example, `./build.sh` compiles the programs, `./run_model.sh results/my_curve.csv` generates a curve with the default settings, `./generate_curves.sh` recreates the example cases, and `./visualize_3d.sh` opens the default interactive view. Use `./track_positions.sh` or `./locate_positions.sh` to run the two position estimators; each prints its required arguments if called without them.
+
 To draw plots from CSV files:
 
 ```sh
@@ -118,6 +122,14 @@ python3 scripts/plot_results.py results/curves
 ```
 
 The magnitude plot shows how the size of the fingerprint changes along the row. The complex-plane plot draws each fingerprint as a point with real and imaginary coordinates. If the path doubles back or passes close to itself, different positions may have similar fingerprints, which can make location harder.
+
+To interactively explore a curve, run:
+
+```sh
+python3 scripts/visualize_3d.py results/termination_0p8.csv
+```
+
+Move the slider to move the red receiver coil along the blue row. The orange lines show which two array coils the circuit model treats as coupled to the receiver; line strength gives a visual hint of the approximate coupling profile. The two small charts mark the selected position on the predicted impedance-size and phase curves. This picture is a teaching schematic: it does not calculate or display the true magnetic field in three dimensions.
 
 ## What the numbers and units mean
 
